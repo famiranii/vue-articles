@@ -12,7 +12,7 @@
                 </div>
                 <div class="mb-3">
                     <label for="exampleFormControlInput1" class="form-label">Description</label>
-                    <input v-model="describtion" type="text" class="form-control" placeholder="Description"
+                    <input v-model="description" type="text" class="form-control" placeholder="Description"
                         id="exampleFormControlInput1">
                 </div>
                 <div class="mb-3">
@@ -51,7 +51,7 @@ export default {
 
             ],
             title: '',
-            describtion: '',
+            description: '',
             body: '',
         }
     },
@@ -65,7 +65,7 @@ export default {
             const writtenArticle = {
                 article: {
                     title: this.title,
-                    describtion: this.describtion,
+                    description: this.description,
                     body: this.body,
                     tagList: []
                 }
@@ -75,12 +75,13 @@ export default {
             writtenArticle.article.tagList = checkedTags.map(tag => tag.title);
             console.log(writtenArticle);
             const postedArticle = JSON.stringify(writtenArticle)
-            const mytoken = localStorage.getItem('token');
             console.log(postedArticle);
 
-            axios.post('https://api.realworld.io/api/users/login', postedArticle, {
+            axios.post('https://api.realworld.io/api/articles', postedArticle, {
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
                 }
             })
                 .then(response => {
@@ -107,9 +108,7 @@ export default {
             .catch(error => {
                 console.log(error);
             });
-
     }
-
 }
 
 </script>

@@ -1,12 +1,11 @@
 <template>
     <div class="body-container vh-100 grid">
         <responsive-header></responsive-header>
-        <section class="h-100 d-flex">
-            <sideBar class="h-100"></sideBar>
-            <div class="form-articles col-12 col-md-10">
+        <section style="min-height: 700px;" class="d-flex">
+            <sideBar></sideBar>
+            <div class="form-articles col-12 col-lg-10">
                 <h2>All Posts</h2>
-                <div class="table-responsive my-4 overflw-x-auto position-relative d-flex flex-column align-items-center "
-                    style="padding-bottom: 50px;">
+                <div class="table-responsive my-4 overflw-x-auto position-relative d-flex flex-column align-items-center ">
                     <table class="table">
                         <colgroup>
                             <col>
@@ -26,7 +25,8 @@
                                 <th scope="col">Created</th>
                             </tr>
                         </thead>
-                        <allPoststable v-for="(item, index ) in paginatedArticles" :key="index" :shownAriticle="item">
+                        <allPoststable @deletedArticle="handleArticleDeleted" v-for="(item, index ) in paginatedArticles"
+                            :key="index" :shownAriticle="item">
                         </allPoststable>
                     </table>
                     <div class="pagination btn-group me-2" role="group" aria-label="First group">
@@ -44,6 +44,7 @@
                             class="nextPageBtn btn btn-outline-secondary btn-white">&gt;</button>
 
                     </div>
+
                 </div>
             </div>
         </section>
@@ -72,20 +73,18 @@ export default {
         }
     },
     mounted() {
-        const savedUsername = localStorage.getItem('username');
-        console.log(savedUsername);
         axios.get('https://api.realworld.io/api/articles', {
             params: {
-                author: 'arefsaravani',
-                limit : 20
+                limit: 34,
             },
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest',
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
             }
         })
             .then(response => {
                 const myArticles = response.data.articles
-                console.log(myArticles);
                 let id = this.shownArticles.length + 1;
                 myArticles.forEach(element => {
                     var createdDate = new Date(element.createdAt)
@@ -99,6 +98,7 @@ export default {
                         tags: element.tagList.toString(),
                         excerpt: element.description.slice(0, 20),
                         date: `${year}-${month}-${day}`,
+                        slug: element.slug
                     }
                     this.shownArticles.push(addedArticle)
                     id++;
@@ -114,14 +114,31 @@ export default {
             return this.$route.query.username
         },
         totalPages() {
-            return Math.ceil(this.shownArticles.length / 7)
+            return Math.ceil(this.shownArticles.length / 8)
         },
         paginatedArticles() {
-            const start = (this.currentPage - 1) * 7
-            const end = start + 7
+            const start = (this.currentPage - 1) * 8
+            const end = start + 8
             return this.shownArticles.slice(start, end)
         },
-    }
+    },
+    methods: {
+        handleArticleDeleted(deletedSlug) {
+            axios.delete(`https://api.realworld.io/api/articles/${deletedSlug}`, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("token")}`
+                }
+            })
+                .then(response => {
+                    this.shownArticles = this.shownArticles.filter(
+                        shownArticle => shownArticle.slug !== deletedSlug
+                    );
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+        },
+    },
 
 }
 </script>

@@ -2,9 +2,9 @@
     <header class="p-3 header-article">
         <div>
             <div class="d-flex">
-                <button type="button" class="navbar-toggler btn blue me-auto px-4 d-md-none" data-bs-toggle="offcanvas"
+                <button type="button" class="navbar-toggler btn blue me-auto px-4 d-lg-none" data-bs-toggle="offcanvas"
                     data-bs-target="#offcanvasDarkNavbar" aria-controls="offcanvasDarkNavbar">post</button>
-                <div class=" d-md-flex align-items-center">
+                <div class=" d-lg-flex align-items-center">
                     <h1 class="text-22 pe-3 text-white">
                         Arvan Challenge
                     </h1>
@@ -35,7 +35,8 @@ export default {
 
     methods: {
         handleLogout() {
-            this.$router.push('/');
+            localStorage.clear()
+            window.location.reload();
         }
     },
 }

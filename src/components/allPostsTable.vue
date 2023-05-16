@@ -21,10 +21,10 @@
                         </button>
                         <div :class="{ 'd-none': !isactive }"
                             class="edit-delet-dropdown position-absolute z-1 border border-secondary-subtle rounded-1 bg-white">
-                            <div class="p-2 pb-1 border-bottom">
-                                <span><router-link class="text-black" to="editArticlePage">Edit</router-link></span>
+                            <div @click="loginOrEditpage" class="p-2 pb-1 border-bottom" style="cursor: pointer;">
+                                <span>Edit</span>
                             </div>
-                            <div class="px-2 py-1"><span style="cursor: pointer;">Delete</span></div>
+                            <div @click="deleteArticle" class="px-2 py-1"><span style="cursor: pointer;">Delete</span></div>
                         </div>
                     </div>
                 </div>
@@ -34,8 +34,7 @@
 </template>
 
 <script>
-
-
+import router from '@/router'
 export default {
     props: {
         shownAriticle: Object
@@ -46,13 +45,32 @@ export default {
             isactive: false
         }
     },
+    mounted() {
+        document.addEventListener('click', this.handleDocumentClick);
+    },
     methods: {
         showDropdown() {
-            if (this.isactive == true) {
-                this.isactive = false
+            this.isactive = !this.isactive;
+        },
+        handleDocumentClick(event) {
+            if (this.$el.contains(event.target)) {
+                return;
             } else {
-                this.isactive = true
+                this.isactive = false;
             }
+        },
+        loginOrEditpage() {
+            const username = localStorage.getItem('username');
+            if (this.shownAriticle.author === username) {
+                router.push('/editArticlePage')
+            } else {
+                router.push('/loginPage')
+            }
+        },
+        deleteArticle() {
+            const articleSlug = this.shownAriticle.slug
+            this.$emit('deletedArticle', articleSlug);
+
         },
     },
 }
