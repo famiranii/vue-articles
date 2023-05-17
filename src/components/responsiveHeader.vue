@@ -36,7 +36,7 @@ export default {
     methods: {
         handleLogout() {
             localStorage.clear()
-            window.location.reload();
+            this.$router.push('/#')
         }
     },
 }

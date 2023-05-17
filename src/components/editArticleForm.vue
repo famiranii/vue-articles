@@ -40,6 +40,7 @@
 <script>
 import articleTags from './articleTags.vue'
 import axios from 'axios'
+import router from '@/router'
 
 export default {
     name: 'app',
@@ -47,12 +48,12 @@ export default {
     data() {
         return {
             tagTitle: '',
-            tags: [
-
-            ],
+            tags: [],
             title: '',
             description: '',
             body: '',
+            isCheckedTags: '',
+            slug :this.$route.params.slug
         }
     },
     methods: {
@@ -70,14 +71,12 @@ export default {
                     tagList: []
                 }
             }
-
             const checkedTags = this.tags.filter(tag => tag.isChecked)
             writtenArticle.article.tagList = checkedTags.map(tag => tag.title);
-            console.log(writtenArticle);
-            const postedArticle = JSON.stringify(writtenArticle)
-            console.log(postedArticle);
+            const editedArticle = JSON.stringify(writtenArticle)
+            console.log(this.slug);
 
-            axios.post('https://api.realworld.io/api/articles', postedArticle, {
+            axios.put(`https://api.realworld.io/api/articles/${this.slug}`, editedArticle, {
                 headers: {
                     'Content-Type': 'application/json',
                     'X-Requested-With': 'XMLHttpRequest',
@@ -86,14 +85,40 @@ export default {
             })
                 .then(response => {
                     console.log(response);
+                    router.push('/allPost')
                 })
                 .catch(error => {
                     console.log(error);
                 });
-
         }
     },
     mounted() {
+        axios.get('https://api.realworld.io/api/articles', {
+            params: {
+                limit: 1,
+                title: this.slug
+            },
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest',
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+        })
+            .then(response => {
+                const articleWantsToEdit = response.data.articles[0]
+                this.title = articleWantsToEdit.title
+                this.description = articleWantsToEdit.description
+                this.body = articleWantsToEdit.body
+                this.tags.forEach(tag => {
+                    const isCheckedTag = articleWantsToEdit.tagList.includes(tag.title);
+                    tag.isChecked = isCheckedTag
+                });
+            })
+            .catch(error => {
+                console.log(error);
+            });
+
+
         axios.get('https://api.realworld.io/api/articles')
             .then(response => {
                 this.posts = response.data;
@@ -105,6 +130,7 @@ export default {
                     })
                 });
             })
+
             .catch(error => {
                 console.log(error);
             });

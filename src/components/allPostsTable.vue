@@ -62,14 +62,15 @@ export default {
         loginOrEditpage() {
             const username = localStorage.getItem('username');
             if (this.shownAriticle.author === username) {
-                router.push('/editArticlePage')
+                router.push(`/editArticlePage/${this.shownAriticle.slug}`)
             } else {
-                router.push('/loginPage')
+                router.push('/#')
             }
         },
         deleteArticle() {
             const articleSlug = this.shownAriticle.slug
             this.$emit('deletedArticle', articleSlug);
+            this.handleDocumentClick(Event)
 
         },
     },

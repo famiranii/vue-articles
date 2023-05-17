@@ -73,7 +73,7 @@ export default {
                     localStorage.setItem('username', username);
                     localStorage.setItem('token', token);
                     this.requireFeild = false
-                    this.$router.push("./")
+                    this.$router.push("./allPost")
                 })
                 .catch(error => {
                     this.requireFeild = true

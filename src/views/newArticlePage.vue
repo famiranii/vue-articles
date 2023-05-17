@@ -5,7 +5,7 @@
             <sideBar></sideBar>
             <div class="form-articles col-12 col-md-10">
                 <h2>New Article</h2>
-               <editArticleForm></editArticleForm>
+               <newArticleForm></newArticleForm>
             </div>
         </section>
     </div>
@@ -15,14 +15,14 @@
 // @ is an alias to /src
 import responsiveHeader from '@/components/responsiveHeader.vue'
 import sideBar from '@/components/sidebarArticle.vue'
-import editArticleForm from '@/components/editArticleForm.vue'
+import newArticleForm from '@/components/newArticleForm.vue'
 
 export default {
     name: 'HomeView',
     components: {
     responsiveHeader,
     sideBar,
-    editArticleForm
+    newArticleForm
 }
 }
 </script>

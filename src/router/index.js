@@ -2,12 +2,12 @@ import { createRouter, createWebHashHistory } from 'vue-router'
 
 const routes = [
   {
-    path: '/',
+    path: '/allPost',
     name : 'all-posts',
     component: () => import('../views/allPosts.vue')
   },
   {
-    path: '/loginPage',
+    path: '/',
     name: 'home',
     component: () => import('../views/loginPage.vue')
   },
@@ -22,7 +22,7 @@ const routes = [
     component: () => import('../views/newArticlePage.vue')
   },
   {
-    path: '/editArticlePage',
+    path: '/editArticlePage/:slug',
     name : 'edit-article',
     component: () => import('../views/editArticlePage.vue')
   },
