@@ -57,14 +57,18 @@ import responsiveHeader from '@/components/responsiveHeader.vue'
 import sideBar from '@/components/sidebarArticle.vue'
 import allPoststable from '@/components/allPostsTable.vue'
 import axios from 'axios'
+import { useToast } from "vue-toastification";
 
 export default {
-
     name: 'HomeView',
     components: {
         responsiveHeader,
         sideBar,
         allPoststable
+    },
+    setup() {
+      const toast = useToast();
+      return { toast }
     },
     data() {
         return {
@@ -133,9 +137,11 @@ export default {
                     this.shownArticles = this.shownArticles.filter(
                         shownArticle => shownArticle.slug !== deletedSlug
                     );
+                    this.toast.success("Article deleted successfuly");
                 })
                 .catch(error => {
                     console.log(error);
+                    this.toast.error("you can only delet your article")
                 });
         },
     },

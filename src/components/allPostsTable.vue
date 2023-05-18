@@ -24,12 +24,30 @@
                             <div @click="loginOrEditpage" class="p-2 pb-1 border-bottom" style="cursor: pointer;">
                                 <span>Edit</span>
                             </div>
-                            <div @click="deleteArticle" class="px-2 py-1"><span style="cursor: pointer;">Delete</span></div>
+                            <div data-bs-toggle="modal" data-bs-target="#exampleModal" class="px-2 py-1"><span
+                                    style="cursor: pointer;">Delete</span></div>
                         </div>
                     </div>
                 </div>
             </td>
         </tr>
+        <div class="modal fade modal-centered" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5 fw-bold" id="exampleModalLabel">Delet article</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        Are you sure to delet article
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">No</button>
+                        <button @click="deleteArticle" type="button" class="btn btn-danger" data-bs-dismiss="modal">Yes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </tbody>
 </template>
 

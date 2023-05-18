@@ -16,8 +16,8 @@
                 </div>
 
                 <div class="form-outline mb-21">
-                    <label class="form-label" for="typePasswordX-2">Password</label>
-                    <input v-model="password" type="password" id="typePasswordX-2" class="form-control form-control-mine" />
+                    <label class="form-label" :class="{ 'text-danger': requireFeild }" for="typePasswordX-2">Password</label>
+                    <input v-model="password" :class="{ 'border border-danger': requireFeild }" type="password" id="typePasswordX-2" class="form-control form-control-mine" />
                     <div class="mt-1" style="height: 25px;">
                         <span class="text-danger" :class="{ 'd-none': !requireFeild }">Required field</span>
                     </div>

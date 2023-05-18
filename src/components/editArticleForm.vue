@@ -41,10 +41,16 @@
 import articleTags from './articleTags.vue'
 import axios from 'axios'
 import router from '@/router'
+import { useToast } from "vue-toastification";
+
 
 export default {
     name: 'app',
     components: { articleTags },
+    setup() {
+      const toast = useToast();
+      return { toast }
+    },
     data() {
         return {
             tagTitle: '',
@@ -86,6 +92,7 @@ export default {
                 .then(response => {
                     console.log(response);
                     router.push('/allPost')
+                    this.toast.success("Well done! Article updated successfuly")
                 })
                 .catch(error => {
                     console.log(error);
