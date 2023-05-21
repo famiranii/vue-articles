@@ -31,7 +31,8 @@
                 </div>
             </td>
         </tr>
-        <div class="modal fade modal-centered" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal fade modal-centered" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -43,7 +44,8 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-light" data-bs-dismiss="modal">No</button>
-                        <button @click="deleteArticle" type="button" class="btn btn-danger" data-bs-dismiss="modal">Yes</button>
+                        <button @click="deleteArticle" type="button" class="btn btn-danger"
+                            data-bs-dismiss="modal">Yes</button>
                     </div>
                 </div>
             </div>
@@ -53,9 +55,19 @@
 
 <script>
 import router from '@/router'
+import { useToast } from 'vue-toastification';
 export default {
+    data() {
+        return {
+            deletdArticle : "",
+        }
+    },
     props: {
         shownAriticle: Object
+    },
+    setup(props) {
+        const toast = useToast()
+        return { toast }
     },
 
     data() {
@@ -69,6 +81,7 @@ export default {
     methods: {
         showDropdown() {
             this.isactive = !this.isactive;
+            this.deletedArticle = this.shownAriticle.slug
         },
         handleDocumentClick(event) {
             if (this.$el.contains(event.target)) {
@@ -82,12 +95,11 @@ export default {
             if (this.shownAriticle.author === username) {
                 router.push(`/editArticlePage/${this.shownAriticle.slug}`)
             } else {
-                router.push('/#')
+                this.toast.error("you can only edit your article")
             }
         },
         deleteArticle() {
-            const articleSlug = this.shownAriticle.slug
-            this.$emit('deletedArticle', articleSlug);
+            this.$emit('deletedArticle', this.deletedArticle);
             this.handleDocumentClick(Event)
 
         },

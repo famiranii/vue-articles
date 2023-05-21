@@ -47,8 +47,8 @@ export default {
     name: 'app',
     components: { articleTags },
     setup() {
-      const toast = useToast();
-      return { toast }
+        const toast = useToast();
+        return { toast }
     },
     data() {
         return {
@@ -106,6 +106,7 @@ export default {
                     element.tagList.forEach(tagsElement => {
                         const tag = { title: tagsElement, isChecked: false };
                         this.tags.push(tag);
+                        this.tags.sort((a, b) => a.title.localeCompare(b.title));
                     })
                 });
             })

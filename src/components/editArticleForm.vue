@@ -31,7 +31,11 @@
             </div>
 
             <div class="col-12 pt-2">
-                <button class="btn btn-sm blue px-4" type="submit">Submit</button>
+                <button class="btn btn-sm blue px-4" :disabled="isLoading" type="submit">
+                    <span v-if="isLoading" class="spinner-border spinner-border-sm me-2" role="status"
+                        aria-hidden="true"></span>
+                    Submit
+                </button>
             </div>
         </form>
     </div>
@@ -48,8 +52,8 @@ export default {
     name: 'app',
     components: { articleTags },
     setup() {
-      const toast = useToast();
-      return { toast }
+        const toast = useToast();
+        return { toast }
     },
     data() {
         return {
@@ -59,7 +63,8 @@ export default {
             description: '',
             body: '',
             isCheckedTags: '',
-            slug :this.$route.params.slug
+            slug: this.$route.params.slug,
+            isLoading: true,
         }
     },
     methods: {
@@ -69,6 +74,7 @@ export default {
             this.tagTitle = ""
         },
         completeForm() {
+            this.isLoading = true
             const writtenArticle = {
                 article: {
                     title: this.title,
@@ -79,8 +85,7 @@ export default {
             }
             const checkedTags = this.tags.filter(tag => tag.isChecked)
             writtenArticle.article.tagList = checkedTags.map(tag => tag.title);
-            const editedArticle = JSON.stringify(writtenArticle)
-            console.log(this.slug);
+            const editedArticle = JSON.stringify(writtenArticle);
 
             axios.put(`https://api.realworld.io/api/articles/${this.slug}`, editedArticle, {
                 headers: {
@@ -91,15 +96,34 @@ export default {
             })
                 .then(response => {
                     console.log(response);
-                    router.push('/allPost')
-                    this.toast.success("Well done! Article updated successfuly")
+                    router.push('/allPost');
+                    this.toast.success("Well done! Article updated successfuly");
+                    this.isLoading = false;
                 })
                 .catch(error => {
                     console.log(error);
+                    this.isLoading = false;
                 });
         }
     },
     mounted() {
+        axios.get('https://api.realworld.io/api/articles')
+            .then(response => {
+                this.posts = response.data;
+                const articles = response.data.articles
+                articles.forEach(element => {
+                    element.tagList.forEach(tagsElement => {
+                        const tag = { title: tagsElement, isChecked: false };
+                        this.tags.push(tag);
+                        this.tags.sort((a, b) => a.title.localeCompare(b.title));
+                    })
+                });
+            })
+
+            .catch(error => {
+                console.log(error);
+            });
+
         axios.get('https://api.realworld.io/api/articles', {
             params: {
                 limit: 1,
@@ -120,26 +144,11 @@ export default {
                     const isCheckedTag = articleWantsToEdit.tagList.includes(tag.title);
                     tag.isChecked = isCheckedTag
                 });
+                this.isLoading = false;
             })
             .catch(error => {
                 console.log(error);
-            });
-
-
-        axios.get('https://api.realworld.io/api/articles')
-            .then(response => {
-                this.posts = response.data;
-                const articles = response.data.articles
-                articles.forEach(element => {
-                    element.tagList.forEach(tagsElement => {
-                        const tag = { title: tagsElement, isChecked: false };
-                        this.tags.push(tag);
-                    })
-                });
-            })
-
-            .catch(error => {
-                console.log(error);
+                this.isLoading = false;
             });
     }
 }
