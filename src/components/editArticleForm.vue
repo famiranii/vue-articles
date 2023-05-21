@@ -10,6 +10,7 @@
                         Please choose a username.
                     </div>
                 </div>
+                
                 <div class="mb-3">
                     <label for="exampleFormControlInput1" class="form-label">Description</label>
                     <input v-model="description" type="text" class="form-control" placeholder="Description"
