@@ -5,7 +5,7 @@
                 <button type="button" class="navbar-toggler btn blue me-auto px-4 d-lg-none" data-bs-toggle="offcanvas"
                     data-bs-target="#offcanvasDarkNavbar" aria-controls="offcanvasDarkNavbar">post</button>
                 <div class=" d-lg-flex align-items-center">
-                    <h1 class="text-22 pe-3 text-white">
+                    <h1 class="text-22 pe-3 text-white" title="Arvan challenge">
                         Arvan Challenge
                     </h1>
 
@@ -20,11 +20,12 @@
     </header>
 </template>
 
+
 <script>
 export default {
     data() {
         return {
-            username :''
+            username: ''
         }
     },
     created() {
@@ -36,7 +37,7 @@ export default {
     methods: {
         handleLogout() {
             localStorage.clear()
-            this.$router.push('/#')
+            this.$router.push('/#');
         }
     },
 }
