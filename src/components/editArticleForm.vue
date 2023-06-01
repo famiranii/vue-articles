@@ -96,7 +96,6 @@ export default {
                 }
             })
                 .then(response => {
-                    console.log(response);
                     router.push('/allPost');
                     this.toast.success("Well done! Article updated successfuly");
                     this.isLoading = false;

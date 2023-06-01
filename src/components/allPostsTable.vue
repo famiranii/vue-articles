@@ -8,8 +8,8 @@
             <td>{{ shownAriticle.excerpt }}</td>
             <td>
                 <div class="d-md-flex">
-                    <span class=" me-1">{{ shownAriticle.date }}</span>
-                    <div class=" d-inline-block">
+                    <span>{{ shownAriticle.date }}</span>
+                    <div class=" ms-auto d-inline-block">
                         <button @click="showDropdown" class="btn  blue-sky text-white">
                             <span>...</span>
                             <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" fill="currentColor"

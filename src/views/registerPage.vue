@@ -59,7 +59,6 @@ export default {
                 }
             }
             const userDataJson = JSON.stringify(userData)
-            console.log(userDataJson);
             axios.post('https://api.realworld.io/api/users', userDataJson, {
                 headers: {
                     'Content-Type': 'application/json'

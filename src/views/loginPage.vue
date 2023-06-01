@@ -65,7 +65,6 @@ export default {
                 }
             }
             const userDataJson = JSON.stringify(userData)
-            console.log(userDataJson);
             axios.post('https://api.realworld.io/api/users/login', userDataJson, {
                 headers: {
                     'Content-Type': 'application/json'
@@ -75,7 +74,6 @@ export default {
                 .then(response => {
                     const username = response.data.user.username;
                     const token = response.data.user.token;
-                    console.log(token);
                     localStorage.setItem('username', username);
                     localStorage.setItem('token', token);
                     this.requireFeild = false

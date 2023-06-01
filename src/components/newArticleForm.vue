@@ -87,7 +87,6 @@ export default {
                 }
             })
                 .then(response => {
-                    console.log(response);
                     this.$router.push('/allPost')
                     this.toast.success("Well done! Article created successfuly")
                 })
