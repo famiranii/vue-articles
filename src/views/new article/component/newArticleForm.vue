@@ -5,7 +5,7 @@
                 <div class="mb-3 has-validation">
                     <label for="exampleFormControlInput1" class="form-label">Title</label>
                     <input v-model="title" type="text" placeholder="Title" class="form-control"
-                        id="exampleFormControlInput1 required">
+                        id="exampleFormControlInput1" required>
                     <div class="invalid-feedback">
                         Please choose a username.
                     </div>
@@ -13,11 +13,12 @@
                 <div class="mb-3">
                     <label for="exampleFormControlInput1" class="form-label">Description</label>
                     <input v-model="description" type="text" class="form-control" placeholder="Description"
-                        id="exampleFormControlInput1">
+                        id="exampleFormControlInput1" required>
                 </div>
                 <div class="mb-3">
                     <label for="exampleFormControlTextarea1" class="form-label">Body</label>
-                    <textarea v-model="body" class="form-control" id="exampleFormControlTextarea1" rows="8"></textarea>
+                    <textarea v-model="body" class="form-control" id="exampleFormControlTextarea1" rows="8"
+                        required></textarea>
                 </div>
             </div>
 
@@ -31,16 +32,21 @@
             </div>
 
             <div class="col-12 pt-2">
-                <button class="btn btn-sm blue px-4" type="submit">Submit</button>
+                <button class="btn btn-sm blue px-4" :disabled="isLoading" type="submit">
+                    <span v-if="isLoading" class="spinner-border spinner-border-sm me-2" role="status"
+                        aria-hidden="true"></span>
+                    Submit
+                </button>
             </div>
         </form>
     </div>
 </template>
 
 <script>
-import articleTags from './articleTags.vue'
+import articleTags from '@/components/articleTags.vue'
 import axios from 'axios'
 import { useToast } from "vue-toastification";
+import { headers } from '@/axiosHeader';
 
 
 export default {
@@ -57,6 +63,7 @@ export default {
             title: '',
             description: '',
             body: '',
+            isLoading: false,
         }
     },
     methods: {
@@ -66,6 +73,7 @@ export default {
             this.tagTitle = ""
         },
         completeForm() {
+            this.isLoading = true
             const writtenArticle = {
                 article: {
                     title: this.title,
@@ -80,11 +88,7 @@ export default {
             const postedArticle = JSON.stringify(writtenArticle)
 
             axios.post('https://api.realworld.io/api/articles', postedArticle, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-Requested-With': 'XMLHttpRequest',
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
-                }
+                headers
             })
                 .then(response => {
                     this.$router.push('/allPost')
@@ -92,6 +96,9 @@ export default {
                 })
                 .catch(error => {
                     console.log(error);
+                    if (error.response.status == 422) {
+                        this.toast.error("this title exists please change it")
+                    }
                 });
 
         }

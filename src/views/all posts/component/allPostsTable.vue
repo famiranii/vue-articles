@@ -21,7 +21,7 @@
                         </button>
                         <div :class="{ 'd-none': !isactive }"
                             class="edit-delet-dropdown position-absolute z-1 border border-secondary-subtle rounded-1 bg-white">
-                            <div @click="loginOrEditpage" class="p-2 pb-1 border-bottom" style="cursor: pointer;">
+                            <div @click="editArticlePage" class="p-2 pb-1 border-bottom" style="cursor: pointer;">
                                 <span>Edit</span>
                             </div>
                             <div data-bs-toggle="modal" data-bs-target="#exampleModal" class="px-2 py-1"><span
@@ -59,7 +59,7 @@ import { useToast } from 'vue-toastification';
 export default {
     data() {
         return {
-            deletdArticle : "",
+            isactive: false,
         }
     },
     props: {
@@ -70,18 +70,15 @@ export default {
         return { toast }
     },
 
-    data() {
-        return {
-            isactive: false
-        }
-    },
     mounted() {
         document.addEventListener('click', this.handleDocumentClick);
     },
     methods: {
         showDropdown() {
-            this.isactive = !this.isactive;
-            this.deletedArticle = this.shownAriticle.slug
+            if (this.shownAriticle.author == localStorage.getItem("username")) {
+                this.isactive = !this.isactive;
+            }
+            localStorage.setItem("clickedArticle", this.shownAriticle.slug)
         },
         handleDocumentClick(event) {
             if (this.$el.contains(event.target)) {
@@ -90,16 +87,11 @@ export default {
                 this.isactive = false;
             }
         },
-        loginOrEditpage() {
-            const username = localStorage.getItem('username');
-            if (this.shownAriticle.author === username) {
-                router.push(`/editArticlePage/${this.shownAriticle.slug}`)
-            } else {
-                this.toast.error("you can only edit your article")
-            }
+        editArticlePage() {
+            router.push(`/editArticlePage/${localStorage.getItem("clickedArticle")}`)
         },
         deleteArticle() {
-            this.$emit('deletedArticle', this.deletedArticle);
+            this.$emit("deleteArticle", localStorage.getItem("clickedArticle"))
             this.handleDocumentClick(Event)
 
         },

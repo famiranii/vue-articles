@@ -4,27 +4,27 @@ const routes = [
   {
     path: '/allPost',
     name : 'all-posts',
-    component: () => import('../views/allPosts.vue')
+    component: () => import('../views/all posts/allPosts.vue')
   },
   {
     path: '/',
     name: 'home',
-    component: () => import('../views/loginPage.vue')
+    component: () => import('../views/login/loginPage.vue')
   },
   {
     path: '/registerPage',
     name: 'registerPage',
-    component: () => import('../views/registerPage.vue')
+    component: () => import('../views/register/registerPage.vue')
   },
   {
     path: '/newArticlePage',
     name : 'new-article',
-    component: () => import('../views/newArticlePage.vue')
+    component: () => import('../views/new article/newArticlePage.vue')
   },
   {
     path: '/editArticlePage/:slug',
     name : 'edit-article',
-    component: () => import('../views/editArticlePage.vue')
+    component: () => import('../views/edit article/editArticlePage.vue')
   },
 ]
 

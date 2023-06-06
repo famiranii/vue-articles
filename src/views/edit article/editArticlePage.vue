@@ -15,7 +15,7 @@
 // @ is an alias to /src
 import responsiveHeader from '@/components/responsiveHeader.vue'
 import sideBar from '@/components/sidebarArticle.vue'
-import formArticle from '@/components/editArticleForm.vue'
+import formArticle from './component/editArticleForm.vue'
 
 export default {
     name: 'HomeView',

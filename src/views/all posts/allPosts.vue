@@ -4,9 +4,21 @@
         <section style="min-height: 700px;" class="d-flex">
             <sideBar></sideBar>
             <div class="form-articles col-12 col-lg-10">
-                <h2>All Posts</h2>
-                <div class="table-responsive my-4 overflw-x-auto position-relative d-flex flex-column align-items-center ">
-                    <table class="table">
+                <div class="d-flex justify-content-between">
+                    <h2>All Posts</h2>
+                    <div>
+                        <button @click="yourArticle = false" class="btn" :class="{ 'btn-secondary': !yourArticle }">all
+                            articles</button>
+                        <button @click="yourArticle = true" class="btn" :class="{ 'btn-secondary': yourArticle }">your
+                            article</button>
+                    </div>
+                </div>
+                <div class="table-responsive my-4 overflw-x-auto position-relative d-flex flex-column align-items-center">
+                    <div v-if="isLoading" class="spinner-border text-primary mt-5" role="status"
+                        style="margin-bottom: 600px;">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <table v-else class="table">
                         <colgroup>
                             <col>
                             <col>
@@ -25,17 +37,18 @@
                                 <th scope="col">Created</th>
                             </tr>
                         </thead>
-                        <allPoststable @deletedArticle="handleArticleDeleted" v-for="(item, index ) in paginatedArticles"
+                        <allPoststable @deleteArticle="handleArticleDeleted" v-for="(item, index ) in displayedArticles"
                             :key="index" :shownAriticle="item">
                         </allPoststable>
                     </table>
-                    <div class="pagination btn-group me-2" role="group" aria-label="First group">
+                    <div class="pagination btn-group" role="group" aria-label="First group">
 
                         <button @click="currentPage--" :disabled="currentPage === 1"
                             class="previousPageBtn btn btn-outline-secondary btn-white">&lt;</button>
 
-                        <template v-for="page in totalPages" v-bind:key="page"> <!-- Move the key here -->
-                            <button @click="currentPage = page" class="pageNumberBtn btn btn-outline-secondary">
+                        <template v-for="page in totalPages" :key="page"> <!-- Move the key here -->
+                            <button @click="currentPage = page" class="pageNumberBtn btn btn-outline-secondary"
+                                :class="[currentPage === page ? 'active' : '']">
                                 {{ page }}
                             </button>
                         </template>
@@ -55,9 +68,10 @@
 // @ is an alias to /src
 import responsiveHeader from '@/components/responsiveHeader.vue'
 import sideBar from '@/components/sidebarArticle.vue'
-import allPoststable from '@/components/allPostsTable.vue'
+import allPoststable from './component/allPostsTable.vue'
 import axios from 'axios'
 import { useToast } from "vue-toastification";
+import { headers } from '@/axiosHeader';
 
 export default {
     name: 'HomeView',
@@ -67,13 +81,16 @@ export default {
         allPoststable
     },
     setup() {
-      const toast = useToast();
-      return { toast }
+        const toast = useToast();
+        return { toast }
     },
     data() {
         return {
             shownArticles: [],
-            currentPage: 1
+            currentPage: 1,
+            isLoading: true,
+            yourArticle: false,
+            username: localStorage.getItem('username')
         }
     },
     mounted() {
@@ -81,32 +98,30 @@ export default {
             params: {
                 limit: 34,
             },
-            headers: {
-                'Content-Type': 'application/json',
-                'X-Requested-With': 'XMLHttpRequest',
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
-            }
+            headers
         })
             .then(response => {
-                const myArticles = response.data.articles
+                const myArticles = response.data.articles;
                 let id = this.shownArticles.length + 1;
-                myArticles.forEach(element => {
-                    var createdDate = new Date(element.createdAt)
-                    var year = createdDate.getFullYear();
-                    var month = createdDate.getMonth() + 1;
-                    var day = createdDate.getDate();
-                    const addedArticle = {
-                        id: id,
-                        title: element.title,
-                        author: element.author.username,
-                        tags: element.tagList.toString(),
-                        excerpt: element.description.slice(0, 20),
-                        date: `${year}-${month}-${day}`,
-                        slug: element.slug
-                    }
-                    this.shownArticles.push(addedArticle)
-                    id++;
+
+                const addedArticles = myArticles.map(element => {
+                    const { title, author, tagList, description, createdAt, slug } = element;
+                    const createdDate = new Date(createdAt);
+                    const date = createdDate.toISOString().slice(0, 10);
+
+                    return {
+                        id: id++,
+                        title,
+                        author: author.username,
+                        tags: tagList.join(", "),
+                        excerpt: description.slice(0, 20),
+                        date,
+                        slug
+                    };
                 });
+
+                this.shownArticles.push(...addedArticles);
+                this.isLoading = false;
 
             })
             .catch(error => {
@@ -117,13 +132,25 @@ export default {
         loginUsername() {
             return this.$route.query.username
         },
-        totalPages() {
-            return Math.ceil(this.shownArticles.length / 8)
+
+        totalArticlesByAthor(){
+            return this.shownArticles.filter((article) => article.author == this.username)  
         },
-        paginatedArticles() {
-            const start = (this.currentPage - 1) * 8
-            const end = start + 8
-            return this.shownArticles.slice(start, end)
+
+        displayedArticles() {
+            if (this.yourArticle) {
+                return this.totalArticlesByAthor.slice((this.currentPage - 1) * 8, this.currentPage * 8)
+            } else {
+                return this.shownArticles.slice((this.currentPage - 1) * 8, this.currentPage * 8)
+            }
+        },
+
+        totalPages() {
+            if (this.yourArticle) {
+                return Math.ceil(this.totalArticlesByAthor.length / 8)
+            } else {
+                return Math.ceil(this.shownArticles.length / 8)
+            }
         },
     },
     methods: {

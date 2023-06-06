@@ -43,10 +43,11 @@
 </template>
 
 <script>
-import articleTags from './articleTags.vue'
+import articleTags from '@/components/articleTags.vue'
 import axios from 'axios'
 import router from '@/router'
 import { useToast } from "vue-toastification";
+import { headers, headersWithoutBearer } from '@/axiosHeader';
 
 
 export default {
@@ -89,11 +90,7 @@ export default {
             const editedArticle = JSON.stringify(writtenArticle);
 
             axios.put(`https://api.realworld.io/api/articles/${this.slug}`, editedArticle, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-Requested-With': 'XMLHttpRequest',
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
-                }
+                headers
             })
                 .then(response => {
                     router.push('/allPost');
@@ -124,32 +121,19 @@ export default {
                 console.log(error);
             });
 
-        axios.get('https://api.realworld.io/api/articles', {
-            params: {
-                limit: 1,
-                title: this.slug
-            },
-            headers: {
-                'Content-Type': 'application/json',
-                'X-Requested-With': 'XMLHttpRequest',
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
-            }
-        })
-            .then(response => {
-                const articleWantsToEdit = response.data.articles[0]
-                this.title = articleWantsToEdit.title
-                this.description = articleWantsToEdit.description
-                this.body = articleWantsToEdit.body
-                this.tags.forEach(tag => {
-                    const isCheckedTag = articleWantsToEdit.tagList.includes(tag.title);
-                    tag.isChecked = isCheckedTag
-                });
-                this.isLoading = false;
-            })
-            .catch(error => {
-                console.log(error);
-                this.isLoading = false;
+        axios.get(`https://api.realworld.io/api/articles/${this.slug}`, { headers: headersWithoutBearer })
+          .then(({ data: { article } }) => {
+            const { title, description, body, tagList } = article;
+            this.title = title;
+            this.description = description;
+            this.body = body;
+            this.tags.forEach(tag => {
+              tag.isChecked = tagList.includes(tag.title);
             });
+          })
+          .catch(console.error)
+          .finally(() => this.isLoading = false);
+        
     }
 }
 
