@@ -67,8 +67,7 @@ export default {
                 .then(response => {
                     const username = response.data.user.username;
                     this.requireFeild = false
-                    this.$router.push('/allPosts')
-                    this.$router.push({ path: '/allPosts', query: { username } })
+                    this.$router.push('./')
                 })
                 .catch(error => {
                     this.requireFeild = true
