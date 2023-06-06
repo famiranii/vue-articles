@@ -7,9 +7,9 @@
                 <div class="d-flex justify-content-between">
                     <h2>All Posts</h2>
                     <div>
-                        <button @click="yourArticle = false" class="btn" :class="{ 'btn-secondary': !yourArticle }">all
+                        <button @click="yourArticles = false" class="btn" :class="{ 'btn-secondary': !yourArticles }">all
                             articles</button>
-                        <button @click="yourArticle = true" class="btn" :class="{ 'btn-secondary': yourArticle }">your
+                        <button @click="yourArticles = true , currentPage=1" class="btn" :class="{ 'btn-secondary': yourArticles }">your
                             article</button>
                     </div>
                 </div>
@@ -89,7 +89,7 @@ export default {
             shownArticles: [],
             currentPage: 1,
             isLoading: true,
-            yourArticle: false,
+            yourArticles: false,
             username: localStorage.getItem('username')
         }
     },
@@ -138,7 +138,7 @@ export default {
         },
 
         displayedArticles() {
-            if (this.yourArticle) {
+            if (this.yourArticles) {
                 return this.totalArticlesByAthor.slice((this.currentPage - 1) * 8, this.currentPage * 8)
             } else {
                 return this.shownArticles.slice((this.currentPage - 1) * 8, this.currentPage * 8)
@@ -146,7 +146,7 @@ export default {
         },
 
         totalPages() {
-            if (this.yourArticle) {
+            if (this.yourArticles) {
                 return Math.ceil(this.totalArticlesByAthor.length / 8)
             } else {
                 return Math.ceil(this.shownArticles.length / 8)
