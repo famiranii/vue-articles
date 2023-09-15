@@ -1,0 +1,138 @@
+input.form-control-mine {
+    border-radius: 4px !important;
+    height: 40px !important;
+}
+
+.body-container {
+    max-width: 1519px;
+    margin: 0 auto;
+}
+
+body {
+    font-family: 'Helvetica Neue', sans-serif;
+}
+
+
+.login-container {
+    width: 450px;
+    height: 430px;
+    background-color: #eceeef;
+    margin: auto;
+}
+
+.login-title {
+    font-size: 47px;
+    color: #707070
+}
+
+.blue {
+    background-color: #1c7cd5 !important;
+    color: #ffffff;
+}
+
+.header-article {
+    background-color: #373a3c !important;
+    color: #ffffff !important;
+    min-height: 60px;
+}
+
+button {
+    border-radius: 4px !important;
+    font-size: 16px !important;
+}
+
+a {
+    text-decoration: none;
+}
+
+.px-20 {
+    padding: 0px 20px;
+}
+
+.pt-35 {
+    padding-top: 35px;
+}
+
+.mb-25 {
+    margin-bottom: 25px;
+}
+
+.mb-21 {
+    margin-bottom: 21px;
+}
+
+.mb-12 {
+    margin-bottom: 10px;
+}
+
+.mb-30 {
+    margin-bottom: 30px;
+}
+
+.mb-28 {
+    margin-bottom: 30px;
+}
+
+.mt-10 {
+    margin-top: 10px;
+}
+
+.text-22 {
+    font-size: 22px;
+}
+
+.blue-sky {
+    background-color: #5bc0de !important;
+}
+
+.sidebar-items:hover {
+    background-color: #ffffff71;
+}
+
+.form-articles {
+    padding: 24px 30px;
+}
+
+.tagsTEextaria {
+    height: 321px !important;
+}
+
+.articleSidebar {
+    display: none;
+}
+
+.headOfList {
+    background-color: #eceeef;
+    color: #55595c;
+}
+
+.bodyOfList {
+    color: #373a3c;
+}
+
+.edit-delet-dropdown {
+    width: 140px;
+    height: 74px;
+    translate: -80px;
+}
+
+.tags-checkbox {
+    background-color: #dddddd;
+    margin-right: 6px;
+}
+
+.pagination{
+    margin-top: 30px;
+}
+
+.pageNumberBtn{
+    border-radius: 0px !important;
+}
+
+.nextPageBtn{
+border-left: 0px;
+}
+
+.previousPageBtn{
+border-right: 0px;
+}
